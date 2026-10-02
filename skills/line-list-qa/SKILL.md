@@ -110,6 +110,7 @@ Use this format for each finding:
 **Why it was flagged:**  
 **Confidence:**  
 **Recommended human follow-up:**  
+**Rule provenance category/categories:**  
 **Source/provenance:**
 
 Use stable, minimally identifying references. Include exact field names and enough source location to trace each finding. Mask or omit sensitive values that are not needed for review; if masking affects verification, explain how the authorized reviewer can access the value securely.
@@ -120,9 +121,36 @@ List missing rules, metadata, interpretation questions, or human decisions neede
 
 ## 9. Evidence and provenance requirements
 
+### Classifying QA-rule provenance
+
+For every QA rule or criterion, state which of these categories it comes from. Classify the criterion separately from the procedure EpiFlow uses to check or report it; one check may involve more than one category.
+
+- **Authoritative source:** Use this category only when the specific rule is supported by an original authoritative source that has been checked for authenticity, current version, exact relevant section, and applicability to the investigation. Cite the source and location. A general methodology reference or unverified citation is not evidence that it supports a particular QA rule.
+- **Project-provided metadata:** Use this category for requirements supplied for the investigation, such as an approved schema, case definition, data dictionary, investigator instruction, reference date, source-system total, or inclusion/exclusion rule. Cite the supplied item and its version or location when available. Metadata remains project-provided even if someone says it reflects external guidance; list an authoritative source separately only when that source and its applicability have been verified.
+- **EpiFlow design decision:** Use this category for a rule or procedure established by this skill, such as which comparisons to perform, how to describe findings, when to abstain, or the severity and evidence-classification scales. Do not present an EpiFlow design decision as an authoritative requirement.
+
+If a rule has no supplied basis, mark it unavailable and do not apply it. If the provenance is unclear or sources conflict, state that and abstain from treating the rule as established. Do not collapse multiple categories into a single label.
+
+| QA check | Criterion or specification provenance | EpiFlow-designed check/reporting procedure |
+| --- | --- | --- |
+| Record and identifier integrity | Uniqueness requirements, approved duplicate-review keys, linkage rules, and identifier crosswalks must come from project-provided metadata; an authoritative source may be listed separately only when verified for the specific criterion. | Looking for exact duplicate rows or potential identifier inconsistencies, treating possible duplicates as candidates, and not merging or removing records. |
+| Required fields and completeness | Required fields must be specified in project-provided metadata; cite an authoritative source separately only if it explicitly establishes the specific requirement and has been verified. | Summarizing missingness and flagging patterns only against an explicit comparator, documented rule, or clearly described within-dataset pattern. |
+| Dates and temporal consistency | Date formats, reference dates, and expected date sequences must come from project-provided metadata or a separately verified authoritative source. | Checking parseability, distinguishing parse failures from invalid or suspicious sequences, and not assuming event ordering. |
+| Categorical values and coding | Allowed categories, code lists, and coding conventions must come from project-provided metadata or a separately verified authoritative source. | Comparing values to the supplied specification, flagging unsupported values, and not silently standardizing them. |
+| Ranges and numeric validity | Approved ranges, units, and formats must come from project-provided metadata or a separately verified authoritative source. | Comparing values to the supplied specification and not treating statistical rarity alone as an error or inventing a range. |
+| Reliability and source consistency | Source or measurement procedures, repeatability criteria, and comparison records must be supplied as project metadata or supported by a separately verified authoritative source. | Reporting observed disagreement against that basis without deciding which source is correct or claiming reliability without an approved standard. |
+| Related-field consistency | Required cross-field relationships must come from project-provided metadata or a separately verified authoritative source. | Testing only specified relationships and reporting conflicts without choosing a resolution. |
+| Counts and denominators | Expected totals, denominator definitions, and inclusion/exclusion rules must come from project-provided metadata or a separately verified authoritative source. | Reconciling only against supplied bases and not inferring the correct denominator from the line list alone. |
+| Schema and investigation requirements | Approved schemas, versions, and required investigation fields must be supplied as project-provided metadata or supported by a separately verified authoritative source. | Comparing against the supplied specification and reporting differences without inventing requirements. |
+| Other specified checks | The specific rule must be supplied in project-provided metadata or supported by a separately verified authoritative source, and the check must be authorized for the review. | Performing only the documented, scoped check and reporting its basis and limitations. |
+
+The skill's evidence classifications (confirmed data error, suspected anomaly, and limitation/not assessable), severity levels, abstention and escalation behavior, human-review requirements, privacy safeguards, non-modification requirement, and report format are EpiFlow design decisions. They describe this review workflow; they are not external QA standards. A check may therefore use a project-provided or authoritative criterion while its comparison and reporting procedure is an EpiFlow design decision.
+
+The CDC *Field Epidemiology Manual* is identified as methodological context in this skill, but this document does not cite a verified version, access date, or exact section supporting any particular QA criterion. Accordingly, no individual criterion in the check list above is attributed here to an authoritative source. Do not infer such attribution from the source register or from the existence of a citation.
+
 - Identify the exact dataset version reviewed and its supplied provenance. Record a hash/checksum only if available or generated by an authorized, approved process.
 - For every finding, preserve source row/case reference, exact source field name, and the value or problem in a privacy-minimizing form.
-- Cite the precise schema, data dictionary, case-definition provision, investigator instruction, source-system total, prior version, or other rule used. Include document version/date and section or location when available.
+- For each check performed and finding, report the provenance category or categories for the criterion and for the check/reporting procedure. Cite the precise schema, data dictionary, case-definition provision, investigator instruction, source-system total, prior version, or authoritative source used. Include document version/date and section or location when available.
 - Distinguish observed values, comparisons, derived check results, assumptions, and AI-generated suggestions. Describe any comparison representation or parsing that affects the check; do not present it as a source-data change.
 - Report check denominators and unavailable evidence where relevant. Do not imply a check passed when it was not performed.
 - Do not invent source citations or imply that guidance supports a particular validation rule unless the original source and applicable section have been checked.
