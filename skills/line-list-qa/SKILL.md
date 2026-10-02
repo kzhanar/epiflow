@@ -90,7 +90,7 @@ Return a concise report with the following parts:
 
 - **Dataset reviewed:** supplied file or dataset name, version/date, and hash/checksum if available.
 - **Review scope:** purpose and checks requested.
-- **Checks performed:** each check, applicable rule/basis, and number of records/fields assessed when determinable.
+- **Checks performed:** each check, applicable rule/basis, provenance category or categories for the criterion and procedure, and number of records/fields assessed when determinable.
 - **Checks not performed:** each omitted or incomplete check and why.
 - **Summary counts by finding category:** include evidence classification and severity counts; make clear whether counts are findings or distinct affected records.
 - **Source data status:** explicitly state: **“No source data were modified.”**
